@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Icon from "@/components/ui/icon";
+import CarMap from "@/components/CarMap";
 
 const CAR_IMAGE = "https://cdn.poehali.dev/projects/87e28bcf-5430-4a7e-9f83-f80ec1a87efa/files/4b60a295-b045-483e-9a93-6988092f6124.jpg";
 
@@ -260,58 +261,106 @@ export default function Index() {
 
       {/* BOOKING */}
       <section id="booking" className="py-24 relative">
-        <div className="max-w-4xl mx-auto px-6">
+        <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <div className="font-mono text-xs text-cyan-400 tracking-widest uppercase mb-3">// 003 — БРОНИРОВАНИЕ</div>
             <h2 className="font-exo font-black text-4xl lg:text-5xl text-white">Забронировать <span className="neon-text">авто</span></h2>
+            <p className="font-sans text-gray-500 mt-4">Выберите автомобиль на карте или укажите маршрут — подберём ближайший</p>
           </div>
-          <div className="glass-card rounded-2xl p-8 neon-border">
-            <div className="grid md:grid-cols-2 gap-6 mb-6">
-              <div>
-                <label className="font-mono text-xs text-cyan-400 tracking-widest uppercase block mb-2">Откуда</label>
-                <div className="relative">
-                  <Icon name="MapPin" size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400" />
-                  <input type="text" placeholder="Укажите адрес подачи" className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 pl-10 font-sans text-sm text-white placeholder-gray-600 focus:outline-none focus:border-cyan-400/60 transition-colors" />
-                </div>
+
+          <div className="grid lg:grid-cols-5 gap-6 items-start">
+            {/* MAP */}
+            <div className="lg:col-span-3 h-[520px]">
+              <CarMap />
+            </div>
+
+            {/* FORM */}
+            <div className="lg:col-span-2 glass-card rounded-2xl p-6 neon-border">
+              <div className="font-mono text-xs text-cyan-400 tracking-widest uppercase mb-5 flex items-center gap-2">
+                <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                Параметры поездки
               </div>
-              <div>
-                <label className="font-mono text-xs text-cyan-400 tracking-widest uppercase block mb-2">Куда</label>
-                <div className="relative">
-                  <Icon name="Navigation" size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400" />
-                  <input type="text" placeholder="Пункт назначения" className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 pl-10 font-sans text-sm text-white placeholder-gray-600 focus:outline-none focus:border-cyan-400/60 transition-colors" />
+
+              <div className="space-y-4">
+                <div>
+                  <label className="font-mono text-xs text-gray-500 tracking-widest uppercase block mb-2">Откуда</label>
+                  <div className="relative">
+                    <Icon name="MapPin" size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400" />
+                    <input type="text" placeholder="Адрес подачи" className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 pl-10 font-sans text-sm text-white placeholder-gray-600 focus:outline-none focus:border-cyan-400/60 transition-colors" />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="font-mono text-xs text-gray-500 tracking-widest uppercase block mb-2">Куда</label>
+                  <div className="relative">
+                    <Icon name="Navigation" size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400" />
+                    <input type="text" placeholder="Пункт назначения" className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 pl-10 font-sans text-sm text-white placeholder-gray-600 focus:outline-none focus:border-cyan-400/60 transition-colors" />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="font-mono text-xs text-gray-500 tracking-widest uppercase block mb-2">Дата</label>
+                    <div className="relative">
+                      <Icon name="Calendar" size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400" />
+                      <input type="date" className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 pl-9 font-sans text-sm text-white focus:outline-none focus:border-cyan-400/60 transition-colors" />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="font-mono text-xs text-gray-500 tracking-widest uppercase block mb-2">Время</label>
+                    <div className="relative">
+                      <Icon name="Clock" size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400" />
+                      <input type="time" className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-2.5 pl-9 font-sans text-sm text-white focus:outline-none focus:border-cyan-400/60 transition-colors" />
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="font-mono text-xs text-gray-500 tracking-widest uppercase block mb-2">Класс авто</label>
+                  <select className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 font-sans text-sm text-white focus:outline-none focus:border-cyan-400/60 transition-colors appearance-none">
+                    <option value="">Любой класс</option>
+                    <option>Электро</option>
+                    <option>Комфорт</option>
+                    <option>Бизнес</option>
+                    <option>Семейный</option>
+                  </select>
+                </div>
+
+                <div className="pt-1">
+                  <button className="w-full neon-btn-filled py-3.5 rounded-xl font-exo font-black text-sm tracking-widest flex items-center justify-center gap-2">
+                    <Icon name="Search" size={16} />
+                    НАЙТИ АВТОМОБИЛЬ
+                  </button>
+                </div>
+
+                <div className="border-t border-white/5 pt-4">
+                  <div className="font-mono text-xs text-gray-600 text-center mb-3 tracking-wider">БЛИЖАЙШИЕ АВТО</div>
+                  <div className="space-y-2">
+                    {[
+                      { name: "Tesla Model 3", dist: "180 м", price: "4.5", charge: 92 },
+                      { name: "Kia EV6", dist: "320 м", price: "3.8", charge: 74 },
+                      { name: "BMW i4", dist: "580 м", price: "6.2", charge: 87 },
+                    ].map((car) => (
+                      <div key={car.name} className="flex items-center justify-between bg-black/20 rounded-xl px-3 py-2.5 border border-white/5 hover:border-cyan-400/30 cursor-pointer transition-colors group">
+                        <div className="flex items-center gap-2.5">
+                          <div className="w-7 h-7 rounded-lg bg-cyan-400/10 flex items-center justify-center">
+                            <Icon name="Car" size={13} className="text-cyan-400" />
+                          </div>
+                          <div>
+                            <div className="font-exo font-bold text-white text-xs">{car.name}</div>
+                            <div className="font-mono text-xs text-gray-500">{car.dist} · заряд {car.charge}%</div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="font-exo font-black text-sm neon-text">{car.price} ₽</div>
+                          <div className="font-mono text-xs text-gray-600">/мин</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
-            <div className="grid md:grid-cols-3 gap-6 mb-8">
-              <div>
-                <label className="font-mono text-xs text-cyan-400 tracking-widest uppercase block mb-2">Дата</label>
-                <div className="relative">
-                  <Icon name="Calendar" size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400" />
-                  <input type="date" className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 pl-10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400/60 transition-colors" />
-                </div>
-              </div>
-              <div>
-                <label className="font-mono text-xs text-cyan-400 tracking-widest uppercase block mb-2">Время</label>
-                <div className="relative">
-                  <Icon name="Clock" size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-cyan-400" />
-                  <input type="time" className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 pl-10 font-sans text-sm text-white focus:outline-none focus:border-cyan-400/60 transition-colors" />
-                </div>
-              </div>
-              <div>
-                <label className="font-mono text-xs text-cyan-400 tracking-widest uppercase block mb-2">Класс авто</label>
-                <select className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 font-sans text-sm text-white focus:outline-none focus:border-cyan-400/60 transition-colors appearance-none">
-                  <option value="">Любой класс</option>
-                  <option>Электро</option>
-                  <option>Комфорт</option>
-                  <option>Бизнес</option>
-                  <option>Семейный</option>
-                </select>
-              </div>
-            </div>
-            <button className="w-full neon-btn-filled py-4 rounded-xl font-exo font-black text-base tracking-widest flex items-center justify-center gap-3">
-              <Icon name="Search" size={18} />
-              НАЙТИ АВТОМОБИЛЬ
-            </button>
           </div>
         </div>
       </section>
