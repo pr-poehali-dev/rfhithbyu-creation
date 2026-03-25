@@ -3,6 +3,7 @@ import Icon from "@/components/ui/icon";
 import CarMap from "@/components/CarMap";
 
 const CAR_IMAGE = "https://cdn.poehali.dev/projects/87e28bcf-5430-4a7e-9f83-f80ec1a87efa/files/4b60a295-b045-483e-9a93-6988092f6124.jpg";
+const TRAILER_IMAGE = "https://cdn.poehali.dev/projects/87e28bcf-5430-4a7e-9f83-f80ec1a87efa/files/ce10242f-8dab-46f0-a456-926880fd0f80.jpg";
 
 const NAV_LINKS = [
   { label: "Главная", href: "#hero" },
@@ -19,6 +20,12 @@ const CARS = [
   { name: "BMW i4", class: "Бизнес", price: "6.2", range: "590 км", power: "340 л.с.", rating: 4.8, reviews: 87, tag: "НОВИНКА", tagColor: "bg-purple-500 text-white" },
   { name: "Kia EV6", class: "Комфорт", price: "3.8", range: "528 км", power: "229 л.с.", rating: 4.7, reviews: 213, tag: null, tagColor: "" },
   { name: "Hyundai IONIQ 5", class: "Семейный", price: "4.1", range: "507 км", power: "217 л.с.", rating: 4.8, reviews: 176, tag: null, tagColor: "" },
+];
+
+const TRAILERS = [
+  { name: "ЧМЗАП 9990", spec: "Низкорамный трал", price: "850", payload: "70 т", length: "18 м", axles: "4 оси", rating: 4.9, reviews: 34, tag: "ХИТ", tagColor: "bg-orange-400 text-black" },
+  { name: "Goldhofer STZ-L6", spec: "Модульный трал", price: "1200", payload: "70 т", length: "22 м", axles: "6 осей", rating: 4.8, reviews: 18, tag: "ТЯЖЁЛЫЙ", tagColor: "bg-red-500 text-white" },
+  { name: "Нефаз 9334", spec: "Низкорамный трал", price: "750", payload: "70 т", length: "17 м", axles: "3 оси", rating: 4.7, reviews: 41, tag: null, tagColor: "" },
 ];
 
 const TARIFFS = [
@@ -97,6 +104,7 @@ function Navbar() {
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState<"hourly" | "daily">("hourly");
+  const [fleetTab, setFleetTab] = useState<"cars" | "heavy">("cars");
   const [nearbyCars, setNearbyCars] = useState<{ id: number; name: string; price: string; charge: number; dist?: number }[]>([
     { id: 1, name: "Tesla Model 3", price: "4.5", charge: 92 },
     { id: 3, name: "Kia EV6", price: "3.8", charge: 74 },
@@ -172,51 +180,139 @@ export default function Index() {
       {/* FLEET */}
       <section id="fleet" className="py-24 relative">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
+          <div className="text-center mb-12">
             <div className="font-mono text-xs text-cyan-400 tracking-widest uppercase mb-3">// 001 — АВТОПАРК</div>
-            <h2 className="font-exo font-black text-4xl lg:text-5xl text-white">Электрический <span className="neon-text">автопарк</span></h2>
-            <p className="font-sans text-gray-500 mt-4 max-w-xl mx-auto">Только электромобили последнего поколения с полным зарядом и рейтингом</p>
+            <h2 className="font-exo font-black text-4xl lg:text-5xl text-white">
+              {fleetTab === "cars" ? <>Электрический <span className="neon-text">автопарк</span></> : <>Тяжёлая <span className="neon-text">техника</span></>}
+            </h2>
+            <p className="font-sans text-gray-500 mt-4 max-w-xl mx-auto">
+              {fleetTab === "cars" ? "Только электромобили последнего поколения с полным зарядом и рейтингом" : "Низкорамные тралы грузоподъёмностью 70 тонн — для перевозки спецтехники и негабарита"}
+            </p>
+
+            <div className="inline-flex mt-8 glass-card rounded-full p-1 gap-1">
+              <button
+                onClick={() => setFleetTab("cars")}
+                className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm font-mono tracking-wider transition-all ${fleetTab === "cars" ? "bg-cyan-400 text-black font-bold" : "text-gray-400 hover:text-white"}`}
+              >
+                <Icon name="Car" size={14} />
+                Легковые
+              </button>
+              <button
+                onClick={() => setFleetTab("heavy")}
+                className={`flex items-center gap-2 px-5 py-2 rounded-full text-sm font-mono tracking-wider transition-all ${fleetTab === "heavy" ? "bg-orange-400 text-black font-bold" : "text-gray-400 hover:text-white"}`}
+              >
+                <Icon name="Truck" size={14} />
+                Спецтехника
+                <span className="bg-orange-400/20 text-orange-400 text-xs px-1.5 py-0.5 rounded-full font-bold">70т</span>
+              </button>
+            </div>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {CARS.map((car, i) => (
-              <div key={car.name} className="glass-card rounded-2xl overflow-hidden group" style={{ animationDelay: `${i * 0.1}s` }}>
-                <div className="relative h-44 overflow-hidden bg-gradient-to-br from-gray-900 to-[#0d1420]">
-                  <img src={CAR_IMAGE} alt={car.name} className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0d1420] via-transparent to-transparent" />
-                  {car.tag && (
-                    <span className={`absolute top-3 right-3 px-2 py-0.5 rounded text-xs font-exo font-black tracking-wider ${car.tagColor}`}>{car.tag}</span>
-                  )}
-                  <div className="absolute bottom-3 left-3">
-                    <span className="font-mono text-xs text-cyan-400 bg-black/40 px-2 py-1 rounded backdrop-blur-sm">{car.class}</span>
+
+          {/* Cars grid */}
+          {fleetTab === "cars" && (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {CARS.map((car, i) => (
+                <div key={car.name} className="glass-card rounded-2xl overflow-hidden group" style={{ animationDelay: `${i * 0.1}s` }}>
+                  <div className="relative h-44 overflow-hidden bg-gradient-to-br from-gray-900 to-[#0d1420]">
+                    <img src={CAR_IMAGE} alt={car.name} className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-500" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0d1420] via-transparent to-transparent" />
+                    {car.tag && (
+                      <span className={`absolute top-3 right-3 px-2 py-0.5 rounded text-xs font-exo font-black tracking-wider ${car.tagColor}`}>{car.tag}</span>
+                    )}
+                    <div className="absolute bottom-3 left-3">
+                      <span className="font-mono text-xs text-cyan-400 bg-black/40 px-2 py-1 rounded backdrop-blur-sm">{car.class}</span>
+                    </div>
+                  </div>
+                  <div className="p-5">
+                    <h3 className="font-exo font-bold text-white text-lg">{car.name}</h3>
+                    <div className="flex items-center gap-2 mt-2 mb-4">
+                      <StarRating rating={car.rating} />
+                      <span className="font-mono text-xs text-gray-400">{car.rating} ({car.reviews})</span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 mb-4">
+                      <div className="bg-black/30 rounded-lg p-2 text-center">
+                        <div className="font-mono text-xs text-gray-500">Запас хода</div>
+                        <div className="font-exo font-bold text-sm text-white mt-0.5">{car.range}</div>
+                      </div>
+                      <div className="bg-black/30 rounded-lg p-2 text-center">
+                        <div className="font-mono text-xs text-gray-500">Мощность</div>
+                        <div className="font-exo font-bold text-sm text-white mt-0.5">{car.power}</div>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <span className="font-exo font-black text-xl neon-text">{car.price} ₽</span>
+                        <span className="font-mono text-xs text-gray-500">/мин</span>
+                      </div>
+                      <button className="neon-btn px-3 py-1.5 rounded-lg text-xs font-exo font-bold tracking-wider">ЗАБРОНИРОВАТЬ</button>
+                    </div>
                   </div>
                 </div>
-                <div className="p-5">
-                  <h3 className="font-exo font-bold text-white text-lg">{car.name}</h3>
-                  <div className="flex items-center gap-2 mt-2 mb-4">
-                    <StarRating rating={car.rating} />
-                    <span className="font-mono text-xs text-gray-400">{car.rating} ({car.reviews})</span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2 mb-4">
-                    <div className="bg-black/30 rounded-lg p-2 text-center">
-                      <div className="font-mono text-xs text-gray-500">Запас хода</div>
-                      <div className="font-exo font-bold text-sm text-white mt-0.5">{car.range}</div>
-                    </div>
-                    <div className="bg-black/30 rounded-lg p-2 text-center">
-                      <div className="font-mono text-xs text-gray-500">Мощность</div>
-                      <div className="font-exo font-bold text-sm text-white mt-0.5">{car.power}</div>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="font-exo font-black text-xl neon-text">{car.price} ₽</span>
-                      <span className="font-mono text-xs text-gray-500">/мин</span>
-                    </div>
-                    <button className="neon-btn px-3 py-1.5 rounded-lg text-xs font-exo font-bold tracking-wider">ЗАБРОНИРОВАТЬ</button>
-                  </div>
+              ))}
+            </div>
+          )}
+
+          {/* Heavy equipment grid */}
+          {fleetTab === "heavy" && (
+            <>
+              <div className="glass-card rounded-2xl p-5 mb-8 flex flex-wrap items-center gap-4 border border-orange-400/20">
+                <div className="w-10 h-10 rounded-xl bg-orange-400/10 border border-orange-400/30 flex items-center justify-center flex-shrink-0">
+                  <Icon name="AlertTriangle" size={18} className="text-orange-400" />
+                </div>
+                <div>
+                  <div className="font-exo font-bold text-white text-sm">Требуется специальное разрешение</div>
+                  <div className="font-sans text-xs text-gray-400 mt-0.5">Для аренды необходимы: удостоверение тракториста-машиниста, спецпропуск на негабарит, договор ответственности. Оформление — 1 рабочий день.</div>
                 </div>
               </div>
-            ))}
-          </div>
+
+              <div className="grid md:grid-cols-3 gap-6">
+                {TRAILERS.map((trailer, i) => (
+                  <div key={trailer.name} className="glass-card rounded-2xl overflow-hidden group" style={{ animationDelay: `${i * 0.1}s` }}>
+                    <div className="relative h-52 overflow-hidden bg-gradient-to-br from-gray-900 to-[#0d1420]">
+                      <img src={TRAILER_IMAGE} alt={trailer.name} className="w-full h-full object-cover opacity-75 group-hover:scale-105 transition-transform duration-500" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#0d1420] via-transparent to-transparent" />
+                      {trailer.tag && (
+                        <span className={`absolute top-3 right-3 px-2 py-0.5 rounded text-xs font-exo font-black tracking-wider ${trailer.tagColor}`}>{trailer.tag}</span>
+                      )}
+                      <div className="absolute bottom-3 left-3 flex gap-2">
+                        <span className="font-mono text-xs text-orange-400 bg-black/50 px-2 py-1 rounded backdrop-blur-sm">{trailer.spec}</span>
+                      </div>
+                    </div>
+                    <div className="p-5">
+                      <h3 className="font-exo font-bold text-white text-xl">{trailer.name}</h3>
+                      <div className="flex items-center gap-2 mt-2 mb-4">
+                        <StarRating rating={trailer.rating} />
+                        <span className="font-mono text-xs text-gray-400">{trailer.rating} ({trailer.reviews})</span>
+                      </div>
+                      <div className="grid grid-cols-3 gap-2 mb-5">
+                        <div className="bg-black/30 rounded-lg p-2 text-center">
+                          <div className="font-mono text-xs text-gray-500">Грузоп.</div>
+                          <div className="font-exo font-bold text-sm text-orange-400 mt-0.5">{trailer.payload}</div>
+                        </div>
+                        <div className="bg-black/30 rounded-lg p-2 text-center">
+                          <div className="font-mono text-xs text-gray-500">Длина</div>
+                          <div className="font-exo font-bold text-sm text-white mt-0.5">{trailer.length}</div>
+                        </div>
+                        <div className="bg-black/30 rounded-lg p-2 text-center">
+                          <div className="font-mono text-xs text-gray-500">Осей</div>
+                          <div className="font-exo font-bold text-sm text-white mt-0.5">{trailer.axles}</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="font-exo font-black text-xl text-orange-400">{trailer.price} ₽</span>
+                          <span className="font-mono text-xs text-gray-500">/час</span>
+                        </div>
+                        <button className="px-3 py-1.5 rounded-lg text-xs font-exo font-bold tracking-wider border border-orange-400/50 text-orange-400 hover:bg-orange-400/10 transition-colors">
+                          ЗАПРОСИТЬ
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
         </div>
       </section>
 
