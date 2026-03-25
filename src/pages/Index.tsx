@@ -97,6 +97,11 @@ function Navbar() {
 
 export default function Index() {
   const [activeTab, setActiveTab] = useState<"hourly" | "daily">("hourly");
+  const [nearbyCars, setNearbyCars] = useState<{ id: number; name: string; price: string; charge: number; dist?: number }[]>([
+    { id: 1, name: "Tesla Model 3", price: "4.5", charge: 92 },
+    { id: 3, name: "Kia EV6", price: "3.8", charge: 74 },
+    { id: 2, name: "BMW i4", price: "6.2", charge: 87 },
+  ]);
 
   return (
     <div className="min-h-screen star-bg">
@@ -271,7 +276,7 @@ export default function Index() {
           <div className="grid lg:grid-cols-5 gap-6 items-start">
             {/* MAP */}
             <div className="lg:col-span-3 h-[520px]">
-              <CarMap />
+              <CarMap onNearbyCars={setNearbyCars} />
             </div>
 
             {/* FORM */}
@@ -334,21 +339,26 @@ export default function Index() {
                 </div>
 
                 <div className="border-t border-white/5 pt-4">
-                  <div className="font-mono text-xs text-gray-600 text-center mb-3 tracking-wider">БЛИЖАЙШИЕ АВТО</div>
+                  <div className="font-mono text-xs text-gray-600 text-center mb-3 tracking-wider flex items-center justify-center gap-2">
+                    БЛИЖАЙШИЕ АВТО
+                    {nearbyCars[0]?.dist !== undefined && (
+                      <span className="text-cyan-400/60">· по геолокации</span>
+                    )}
+                  </div>
                   <div className="space-y-2">
-                    {[
-                      { name: "Tesla Model 3", dist: "180 м", price: "4.5", charge: 92 },
-                      { name: "Kia EV6", dist: "320 м", price: "3.8", charge: 74 },
-                      { name: "BMW i4", dist: "580 м", price: "6.2", charge: 87 },
-                    ].map((car) => (
-                      <div key={car.name} className="flex items-center justify-between bg-black/20 rounded-xl px-3 py-2.5 border border-white/5 hover:border-cyan-400/30 cursor-pointer transition-colors group">
+                    {nearbyCars.map((car) => (
+                      <div key={car.id} className="flex items-center justify-between bg-black/20 rounded-xl px-3 py-2.5 border border-white/5 hover:border-cyan-400/30 cursor-pointer transition-colors">
                         <div className="flex items-center gap-2.5">
                           <div className="w-7 h-7 rounded-lg bg-cyan-400/10 flex items-center justify-center">
                             <Icon name="Car" size={13} className="text-cyan-400" />
                           </div>
                           <div>
                             <div className="font-exo font-bold text-white text-xs">{car.name}</div>
-                            <div className="font-mono text-xs text-gray-500">{car.dist} · заряд {car.charge}%</div>
+                            <div className="font-mono text-xs text-gray-500">
+                              {car.dist !== undefined
+                                ? `${car.dist < 1 ? Math.round(car.dist * 1000) + " м" : car.dist.toFixed(1) + " км"} · заряд ${car.charge}%`
+                                : `заряд ${car.charge}%`}
+                            </div>
                           </div>
                         </div>
                         <div className="text-right">
